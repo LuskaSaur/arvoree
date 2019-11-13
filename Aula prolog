@@ -1,0 +1,93 @@
+%Familia Simpson
+%
+
+homem(orville).
+homem(abraham).
+homem(bart).
+homem(clancy).
+homem(herb).
+homem(homer).
+
+mulher(yuma).
+mulher(mona).
+mulher(jackie).
+mulher(marge).
+mulher(patty).
+mulher(selma).
+mulher(lisa).
+mulher(maggie).
+mulher(ling).
+
+progenitor(orville,abraham).
+progenitor(yuma,abraham).
+progenitor(abraham,herb).
+progenitor(abraham,homer).
+progenitor(mona,herb).
+progenitor(mona,homer).
+progenitor(clancy,marge).
+progenitor(clancy,patty).
+progenitor(clancy,selma).
+progenitor(jackie,marge).
+progenitor(jackie,patty).
+progenitor(jackie,selma).
+progenitor(selma,ling).
+progenitor(marge,bart).
+progenitor(marge,lisa).
+progenitor(marge,maggie).
+progenitor(homer,bart).
+progenitor(homer,lisa).
+progenitor(homer,maggie).
+
+%:- se ou implica
+%, = E = /Conjuncao
+% ^ ,
+% v ;
+% not \+
+% => :-
+% <=> 
+mae(X,Y) :- progenitor(X,Y),mulher(X).
+pai(X,Y) :- progenitor(X,Y),homem(X).
+avop(X,Y) :- pai(X,Z),progenitor(Z,Y).
+avoh(X,Y) :- mae(X,Z),progenitor(Z,Y).
+irmao(X,Y) :-
+    pai(P,X),pai(P,Y),
+    mae(M,X),mae(M,Y),
+    homem(X), X \= Y.
+
+irma(X,Y) :-
+    pai(P,X),pai(P,Y),
+    mae(M,X),mae(M,Y),
+    mulher(X), X \= Y.
+
+tio(X,Y) :- irmao(X,Z), progenitor(Z,Y).
+tia(X,Y) :- irma(X,Z), progenitor(Z,Y).
+
+descendente(Y,X) :- progenitor(X,Y).
+descendente(Y,X) :- 
+    progenitor(Z,Y),
+    descendente(Z,X).
+
+% casamento de padroes nao eh uma caracterisitica de ling logica, mas sempre
+% houve esse tipo de tratamento pelas ling logicas implementadas desde
+% a decada de 1970 e muitas linguagens funcionais.
+% 
+% 2 = 2 True
+% x = 2 True se unifica x para 2
+% 5 = 2 + 3 False, pois 5 nao eh da forma 2 + 3
+% 5 is 2 + 3 True, pois 5 tem o mesmo valor  de 2 +3
+% homem(x) = homem(bart) True, se bart = x
+% [1,2,3] =[x,y,z] True se x =1 y = 2 e z =3 
+% [x|y] = [1,2,3] True se x = 1 e y [2,3] ~casamento head-tail
+% 
+% 
+
+fat(0,1).
+fat(N,F) :- 
+    Nmenos1 is N-1,
+    fat(Nmenos1, FNmenos1),
+    F is N*FNmenos1.
+
+% foi usando FNmenos1 pq se colocasse o F ao inves de estaria sendo colocado F is N*f 
+% que seria falso.
+% maquina de inferencia que faz a busaca
+% 
