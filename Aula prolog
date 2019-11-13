@@ -89,5 +89,10 @@ fat(N,F) :-
 
 % foi usando FNmenos1 pq se colocasse o F ao inves de estaria sendo colocado F is N*f 
 % que seria falso.
-% maquina de inferencia que faz a busaca
+% maquina de inferencia que faz a busca
 % 
+
+tamanho([], 0).
+tamanho([H|T, N) :-
+        tamanho(T, TamanhoResto), 
+        N is 1 + TamanhoResto.
