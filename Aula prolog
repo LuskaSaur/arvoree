@@ -7,6 +7,10 @@ homem(bart).
 homem(clancy).
 homem(herb).
 homem(homer).
+homem(pierre).
+homem(phillip).
+homem(gilbert).
+homem(joseph).
 
 mulher(yuma).
 mulher(mona).
@@ -74,7 +78,7 @@ descendente(Y,X) :-
 % 2 = 2 True
 % x = 2 True se unifica x para 2
 % 5 = 2 + 3 False, pois 5 nao eh da forma 2 + 3
-% 5 is 2 + 3 True, pois 5 tem o mesmo valor  de 2 +3
+% 5 is 2 + 3 True, pois 5 tem o mesmo valor  de 2 + 3
 % homem(x) = homem(bart) True, se bart = x
 % [1,2,3] =[x,y,z] True se x =1 y = 2 e z =3 
 % [x|y] = [1,2,3] True se x = 1 e y [2,3] ~casamento head-tail
@@ -93,6 +97,107 @@ fat(N,F) :-
 % 
 
 tamanho([], 0).
-tamanho([H|T, N) :-
+tamanho([_|T], N) :-
         tamanho(T, TamanhoResto), 
         N is 1 + TamanhoResto.
+
+        
+% 18/11
+%  Use prog em prolog para responder a questão:
+% Uma pessoa é feliz quando ela gostada dela. Valery, em especial, gosta de homens jovens e bonitos
+% ou ricos e fortes. Entre ps rapazes que ela conhece:
+% a) jean, joseph e pierre sao ricos;
+% b) gilbert e jean são fortes;
+% c)pierre e jean sao bonitos;
+% d)philip eh jovem;
+% Sabendo que pierre, phillip e jean gostam de valery, Valery eh feliz ?
+
+
+rico(jean).
+rico(joseph).
+rico(pierre).
+
+forte(gilbert).
+forte(jean).
+
+bonito(pierre).
+bonito(jean).
+
+jovem(phillip).
+
+gosta(pierre, valery).
+gosta(phillip,valery).
+gosta(jean, valery).
+
+gosta(valery,X) :-
+    homem(X),bonito(X), jovem(X);
+    homem(X),rico(X), forte(X).
+    
+feliz(X) :- gosta(Y,X), gosta(X,Y).
+
+% questao a)
+
+
+
+%2. Crie os seguintes predicaddos:
+% a) soma(L,S) = V se s é a soma dos elementos a lista L.
+% b) prod(L,P) = V se P é o produto dos elementos da lsiat L.
+% c) membro(X,L) = V se X pertence a L
+% d) cont(L1,L2,L3) = V se l3 eh a concatenação de L1 e L2.
+% e) div(L1,L2,L3) = V se L2 e L3 possuem os elementos alternados de L1.
+% f) ocat(L1,L2,L3) = V se L3 é a concatenção ordenada de L1 e L2.
+% g) mergesort(L, LS) = V se LS é a versão ordenada de L. 
+% 
+% 
+% questao a)
+
+soma([], 0).
+soma([H|T], S) :-
+    soma(T, SomaT),
+    S is H + SomaT.
+
+
+% questao B)
+
+prod([], 0).
+prod([H|T], P) :-
+    prod(T, ProdT),
+    P is H + ProdT.
+
+
+% quetso c)
+membro(X, [X|_]).
+membro(X, [_|H]) :-
+       membro(X, H).
+
+
+%questao d)
+cat([], L2, L2).
+cat(L1, [], L1).
+cat([H1|T1], L2, [H1|T3]) :-
+    cat(T1, L2, T3).
+
+%questao d)
+div([], [], []).
+div([X], [X], []).
+div([H1,H2|T], [H1|T1], [H2|T2]) :-
+    div(T, T1,T2).
+
+
+%questao e)
+ocat([], L2, L2).
+ocat(L1, [], L1).
+ocat([H1|T1], [H2|T2], [H1|T3]) :-
+    H1 > H2,
+    cat(T1, [H2|T2], T3).
+ocat([H1|T1], [H2|T2], [H2|T3]) :-
+        cat([H1|T!], T2, T3).
+
+
+mergesort([], []).
+mergesort([X], [X]).
+mergesort(L, L0) :-
+    divide(L, L1, L2),
+    mergesort(L1, L10),
+    mergesort(L2, L20),
+    ocat(L10, L20, L0).
